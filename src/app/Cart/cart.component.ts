@@ -1,6 +1,8 @@
-import {AfterViewChecked, AfterViewInit, Component, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import { AfterViewInit, Component } from '@angular/core';
+import { Observable, Subscriber } from 'rxjs';
 import * as L from 'leaflet';
+import {environment} from "../../environments/environment";
+import 'leaflet/dist/leaflet.css';
 
 @Component({
   selector: 'cart-root',
@@ -8,127 +10,92 @@ import * as L from 'leaflet';
   styleUrls: ['./cart.component.css']
 })
 
-export class CartComponent implements AfterViewInit {
-  map: any;
-
-
-  //atao eto daoly ny liste an icone
-  // retrieve from https://gist.github.com/ThomasG77/61fa02b35abf4b971390
-  smallIcon = new L.Icon({
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-icon.png',
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-icon-2x.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    shadowSize: [41, 41]
-  });
-
+/*export class CartComponent implements AfterViewInit,OnInit {
+  map !: any;
 
   constructor() {
   }
 
   ngOnInit(): void {
-    const madaCoordPourLeZoom =
+  }
+
+  ngAfterViewInit() {
+    this.createMap();
+  }
+
+  createMap() {
+    const parcThabor = {
+      lat: -18.879190,
+      lng:  47.507905,
+    };
+    const zoomlevel = 6;
+    this.map = L.map('map',
       {
-        lat: -18.92496,
-        lng: 46.441642,
-      };
-    /*6 mahia ny 22 regions*/
-    const zoomLevel = 6;
-
-    //zoom level: niveau de zoom le vo mipoitra
-    //creation et affectation de la carte
-    //eto amle 'map' anaranle div asiana azy, ny ambony option daoly
-    this.map = L.map('map', {
-      center: [madaCoordPourLeZoom.lat, madaCoordPourLeZoom.lng],
-      zoom: zoomLevel
-    });
-
-    // minZoom:  ,
-    //   maxZoom: , pour limiter la capacité de zoom
-    //mitelecharge anle layer(tsy maintsy misy)par le lien
+        center: [parcThabor.lat, parcThabor.lng],
+        zoom: zoomlevel
+      });
     const mainLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       minZoom: 1,
       maxZoom: 17,
+      zoomOffset: -1,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
+    mainLayer.addTo(this.map);
+  }
+}*/
+export class CartComponent implements AfterViewInit {
+  map: any;
 
-
+  constructor() {
   }
 
-  ngAfterViewInit(): void {
-
+  public ngAfterViewInit(): void {
+    this.loadMap();
   }
 
-  /* reloadData() {
-     this.signalementservice(4).subscribe(data => {
-       this.listeSignalParRegion = data;
-       //console.log("données reçues");
+  private getCurrentPosition(): any {
+    return new Observable((observer: Subscriber<any>) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position: any) => {
+          observer.next({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+          observer.complete();
+        });
+      } else {
+        observer.error();
+      }
+    });
+  }
 
-       //atao eto ambany eto le fonction mila anle données no antsoina fa manjary mbola tsy azo le données
-       //na mbola ao amle ngafterview init aza dia mbola tsy hitany satria le izy le mandeha assynchrone dia hafahafa
-       this.createMap();
+  private loadMap(): void {
+    this.map = L.map('map').setView([-18.879190, 47.507905], 5);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: environment.mapbox.accessToken,
+    }).addTo(this.map);
 
-     });
+    this.getCurrentPosition()
+    .subscribe((position: any) => {
+      this.map.flyTo([position.latitude, position.longitude], 13);
 
-   }*/
+      const icon = L.icon({
+        iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
+        shadowUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-shadow.png',
+        popupAnchor: [13, 0],
+      });
 
-
-  /*createMap() {
-    //config générale ilainle map irery iany fa tsy le classe na ny fonction hafa no ato
-    const madaCoordPourLeZoom =
-      {
-        lat: -18.92496,
-        lng: 46.441642,
-      };
-    /*6 mahia ny 22 regions*/
-  //const zoomLevel = 6;
-  //zoom level: niveau de zoom le vo mipoitra
-  //creation et affectation de la carte
-  //eto amle 'map' anaranle div asiana azy, ny ambony option daoly
-  /*this.map = L.map('map', {
-    center: [madaCoordPourLeZoom.lat, madaCoordPourLeZoom.lng],
-    zoom: zoomLevel
-  });
-
-  // minZoom:  ,
-  //   maxZoom: , pour limiter la capacité de zoom
-  //mitelecharge anle layer(tsy maintsy misy)par le lien
-  const mainLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    minZoom: 1,
-    maxZoom: 17,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  });
-
-  /* const coordonnee =
-   {
-     // {{signalementCarteR.categorie[0].nom}}
-     // {{signalementCarteR.categorie[0].nom}}
-     lat: this.listeSignalParRegion[0].coordonnee.latitude,
-     lng: this.listeSignalParRegion[0].coordonnee.longitude,
-   };
-
-   mainLayer.addTo(this.map);
-   this.addMarker();*/
-  //
-  //}
-
-
-  /*ajout*/
-  /*addMarker()
-  {
-    for(let i=0; i<this.listeSignalParRegion.length; i++)
-    {
-      //mbola amboarina eo le valuer dynamique mbola tsy mipoitra dia mbola atao différent par etat koa ny couleur an icone
-      const marker = L.marker([this.listeSignalParRegion[i].coordonnee.latitude, this.listeSignalParRegion[i].coordonnee.longitude], { icon: this.smallIcon });
-      marker.addTo(this.map).bindPopup(
-        "<h3>"+this.listeSignalParRegion[i].description+"</h3><h4>Catégorie:"+this.listeSignalParRegion[i].categorie[0].nom+"</h4><h5>Etat:"+this.listeSignalParRegion[i].description+"</h5>"
-      );
-    }
-  }*/
-
+      const marker = L.marker([position.latitude, position.longitude], { icon }).bindPopup('Angular Leaflet');
+      marker.addTo(this.map);
+    });
+  }
 }
-
 
 

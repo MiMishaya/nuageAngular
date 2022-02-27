@@ -21,6 +21,8 @@ import { ListSignalementComponent } from './list-signalement/list-signalement.co
 import { ListSignalementRechercheComponent } from './list-signalement-recherche/list-signalement-recherche.component';
 import { ChartjsComponent } from './modules/application/chartjs/chartjs.component';
 import { ChartjsModule } from './modules/application/chartjs/chartjs.module';
+import { MapComponent } from './map/map.component';
+import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 
 @NgModule({
   declarations: [
@@ -38,14 +40,16 @@ import { ChartjsModule } from './modules/application/chartjs/chartjs.module';
     NavComponent,
     ListSignalementComponent,
     ListSignalementRechercheComponent,
-    ChartjsComponent
+    ChartjsComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ChartjsModule
+    ChartjsModule,
+    LeafletModule
   ],
   providers: [
     CartComponent,
