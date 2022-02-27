@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {LoginService} from "../service/login.service";
 import {ChefRegion} from "../class/ChefRegion";
-import {ChefRegionService} from "../service/ChefRegion.service";
 
 @Component({
   selector: 'login-root',
@@ -11,7 +10,7 @@ import {ChefRegionService} from "../service/ChefRegion.service";
 })
 export class LoginComponent implements OnInit{
   username: string = "email6@gmail.com";
-  password : string = "12345678";
+  password : string = "123456789";
   errorMessage = 'Invalid Credentials';
   invalidLogin = false;
   token !: string ;

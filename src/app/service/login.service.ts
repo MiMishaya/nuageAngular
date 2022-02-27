@@ -13,7 +13,7 @@ export class LoginService {
   USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
 
   constructor(private http: HttpClient) {
-
+    
   }
 
   // @ts-ignore

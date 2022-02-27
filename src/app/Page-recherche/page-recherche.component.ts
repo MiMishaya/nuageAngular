@@ -5,6 +5,9 @@ import { Component } from '@angular/core';
   templateUrl: './page-recherche.component.html',
   styleUrls: []
 })
-export class PageRechercheComponent {}
+export class PageRechercheComponent {
+
+  
+}
 
 

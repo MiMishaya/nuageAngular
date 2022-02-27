@@ -6,9 +6,9 @@ import {observable} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class SignalementService{
+export class TypeSignalementService{
 
-  url = 'http://localhost:2222/api/ChefRegions/signalements';
+  url = 'http://localhost:2222/api/TypeSignalements';
 
   constructor(private http: HttpClient) {
 
@@ -18,11 +18,9 @@ export class SignalementService{
   listeSig(token: string) : observable<any> {
     console.log("token : "+"Bearer ".concat(token));
     let headers2 : HttpHeaders = new HttpHeaders().set("Authorization", "Bearer ".concat(token));
-    let params1 : HttpParams = new HttpParams().set("pageNo", 1000);
     return this.http.get(
       this.url,
       {
-        params : params1,
         headers : headers2
       }
     );
